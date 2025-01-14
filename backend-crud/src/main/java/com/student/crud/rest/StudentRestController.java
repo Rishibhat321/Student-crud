@@ -3,10 +3,7 @@ package com.student.crud.rest;
 import com.student.crud.entity.Student;
 import com.student.crud.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,14 +28,49 @@ public class StudentRestController {
     }
 
     @GetMapping("/students/{studentId}")
-    public Student findById(@PathVariable("studentId") int studentId) {
+    public Student findById(@PathVariable int studentId) {
 
         Student theStudent = studentService.findById(studentId);
+
+        if(theStudent==null) {
+            throw new RuntimeException("Student id - " + studentId + " not found");
+        }
 
         return theStudent;
     }
 
 
+    @PostMapping("/students")
+    public Student addNewStudent(@RequestBody Student theStudent) {
+
+        theStudent.setId(0);
+
+        Student dbStudent = studentService.save(theStudent);
+
+        return dbStudent;
+    }
+
+
+    @PutMapping("/students")
+    public Student UpdateStudent(@RequestBody Student theStudent) {
+        Student dbStudent = studentService.save(theStudent);
+
+        return dbStudent;
+    }
+
+    @DeleteMapping("/students/{studentId}")
+    public String deleteById(@PathVariable int studentId) {
+
+        Student theStudent = studentService.findById(studentId);
+
+        if(theStudent==null) {
+            throw new RuntimeException("Student id - " + studentId + "does not exist");
+        }
+
+        studentService.deleteById(studentId);
+
+        return "Deleted Student id - " + studentId;
+    }
 
 
 }

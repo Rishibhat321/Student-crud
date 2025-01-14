@@ -29,5 +29,13 @@ public class StudentDAOImpl implements StudentDAO{
         return theStudents;
     }
 
+    @Override
+    public Student findById(int theId) {
+
+        Student theStudent = entityManager.find(Student.class, theId);
+
+        return theStudent;
+    }
+
 
 }
